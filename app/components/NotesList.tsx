@@ -1,9 +1,9 @@
-
 "use client";
 
 import { useState } from "react";
-import { FileText, Clock, Hash, Plus, Search } from "lucide-react";
+import { FilePlus, Clock, Search, Trash2 } from "lucide-react";
 import type { Note } from "../types";
+import { Tooltip } from "./Tooltip";
 
 interface NotesListProps {
   notes: Note[];
@@ -12,102 +12,110 @@ interface NotesListProps {
 }
 
 export function NotesList({ notes, onNoteSelect, onNewNote }: NotesListProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const filteredNotes = notes.filter(note => 
-    note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    note.content.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
+  
   const formatDate = (date: Date) => {
-    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
-      Math.floor((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      'day'
-    );
+    return new Date(date).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+  
+  const getPreviewText = (content: string) => {
+    return content.length > 100 ? content.substring(0, 100) + "..." : content;
+  };
+  
+  const handleDeleteNote = (noteId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (confirm("Are you sure you want to delete this note?")) {
+      const updatedNotes = notes.filter(note => note.noteId !== noteId);
+      localStorage.setItem('agentsynth-notes', JSON.stringify(updatedNotes));
+      // Force a reload to update the notes list
+      window.location.reload();
+    }
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header with Search */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-heading">Your Notes</h2>
+    <div className="card">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl sm:text-2xl font-semibold">My Notes</h3>
         <button
           onClick={onNewNote}
-          className="btn-accent flex items-center gap-2"
+          className="flex items-center gap-2 px-3 py-1 bg-accent text-white rounded-md hover:bg-accent/90 transition-colors"
         >
-          <Plus className="w-4 h-4" />
-          New Note
+          <FilePlus size={16} />
+          <span className="text-sm">New Note</span>
         </button>
       </div>
-
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-secondary" />
+      
+      <div className="relative mb-4">
+        <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary" />
         <input
           type="text"
+          placeholder="Search notes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search notes and tags..."
-          className="input-field w-full pl-10"
+          className="w-full pl-10 input-field"
         />
       </div>
-
-      {/* Notes List */}
-      <div className="space-y-3">
-        {filteredNotes.length === 0 ? (
-          <div className="card text-center py-8">
-            <FileText className="w-12 h-12 text-text-secondary mx-auto mb-3" />
-            <h3 className="text-lg font-semibold mb-2">No notes yet</h3>
-            <p className="text-text-secondary mb-4">
-              Start by creating your first note to organize your thoughts.
-            </p>
-            <button onClick={onNewNote} className="btn-primary">
-              Create First Note
-            </button>
-          </div>
-        ) : (
-          filteredNotes.map((note) => (
+      
+      {filteredNotes.length === 0 ? (
+        <div className="text-center py-8">
+          {notes.length === 0 ? (
+            <div className="space-y-2">
+              <p className="text-text-secondary">You don't have any notes yet.</p>
+              <button
+                onClick={onNewNote}
+                className="text-accent hover:underline"
+              >
+                Create your first note
+              </button>
+            </div>
+          ) : (
+            <p className="text-text-secondary">No notes match your search.</p>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filteredNotes.map(note => (
             <div
               key={note.noteId}
               onClick={() => onNoteSelect(note)}
-              className="card hover:shadow-lg transition-shadow cursor-pointer"
+              className="p-3 border border-primary/10 rounded-md hover:border-accent/30 hover:bg-surface transition-colors cursor-pointer"
             >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1">
-                  <p className="text-body line-clamp-3 mb-2">
-                    {note.content.substring(0, 150)}
-                    {note.content.length > 150 && '...'}
+              <div className="flex justify-between items-start">
+                <div className="flex-1 min-w-0">
+                  <p className="text-text-primary line-clamp-2 text-sm sm:text-base">
+                    {getPreviewText(note.content)}
                   </p>
-                  
-                  {note.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {note.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="inline-flex items-center gap-1 px-2 py-1 bg-accent/10 text-accent rounded-sm text-xs"
-                        >
-                          <Hash className="w-2 h-2" />
-                          {tag}
-                        </span>
-                      ))}
-                      {note.tags.length > 3 && (
-                        <span className="text-xs text-text-secondary">
-                          +{note.tags.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  <div className="flex items-center gap-1 mt-2">
+                    <Clock size={12} className="text-text-secondary" />
+                    <span className="text-xs text-text-secondary">
+                      {formatDate(new Date(note.updatedAt))}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-center gap-2 text-xs text-text-secondary">
-                <Clock className="w-3 h-3" />
-                {formatDate(new Date(note.updatedAt))}
+                <button
+                  onClick={(e) => handleDeleteNote(note.noteId, e)}
+                  className="ml-2 p-1 text-text-secondary hover:text-red-500 transition-colors"
+                  aria-label="Delete note"
+                >
+                  <Tooltip content="Delete this note" position="left">
+                    <Trash2 size={16} />
+                  </Tooltip>
+                </button>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
+

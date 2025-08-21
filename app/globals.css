@@ -20,19 +20,19 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-md transition-colors duration-base;
+    @apply bg-primary hover:bg-primary/90 active:bg-primary/80 text-white px-4 py-3 rounded-md transition-all duration-base shadow-sm hover:shadow focus:ring-2 focus:ring-primary/30 focus:outline-none;
   }
   
   .btn-accent {
-    @apply bg-accent hover:bg-accent/90 text-white px-4 py-3 rounded-md transition-colors duration-base;
+    @apply bg-accent hover:bg-accent/90 active:bg-accent/80 text-white px-4 py-3 rounded-md transition-all duration-base shadow-sm hover:shadow focus:ring-2 focus:ring-accent/30 focus:outline-none;
   }
   
   .card {
-    @apply bg-surface border border-primary/10 rounded-lg p-6 shadow-card;
+    @apply bg-surface border border-primary/10 rounded-lg p-4 sm:p-6 shadow-card hover:shadow-lg transition-shadow duration-base;
   }
   
   .input-field {
-    @apply bg-surface border border-primary/20 rounded-md px-3 py-2 text-text-primary placeholder:text-text-secondary focus:border-accent focus:outline-none transition-colors duration-fast;
+    @apply bg-surface border border-primary/20 rounded-md px-3 py-2 text-text-primary placeholder:text-text-secondary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all duration-fast;
   }
   
   .text-display {
@@ -46,6 +46,11 @@
   .text-body {
     @apply text-base leading-7;
   }
+  
+  /* Interactive element states */
+  button, a, input, textarea, select {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50;
+  }
 }
 
 @keyframes fadeIn {
@@ -56,4 +61,31 @@
 @keyframes slideUp {
   from { transform: translateY(10px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-pulse-custom {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
 }

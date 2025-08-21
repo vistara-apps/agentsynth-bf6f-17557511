@@ -71,8 +71,8 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="flex flex-col min-h-screen bg-bg">
-      <div className="w-full max-w-xl mx-auto px-4 py-3">
-        <header className="flex justify-between items-center mb-6 h-11">
+      <div className="w-full max-w-xl mx-auto px-4 py-3 sm:px-6">
+        <header className="flex justify-between items-center mb-4 sm:mb-6 h-11">
           <div>
             <Wallet className="z-10">
               <ConnectWallet>
