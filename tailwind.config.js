@@ -3,12 +3,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: 'hsl(210 40% 30%)',
-        accent: 'hsl(195 70% 50%)',
-        bg: 'hsl(210 40% 95%)',
-        surface: 'hsl(210 40% 98%)',
-        'text-primary': 'hsl(210 40% 15%)',
-        'text-secondary': 'hsl(210 40% 40%)',
+        primary: 'hsl(210 45% 25%)',      // Darker for better contrast
+        accent: 'hsl(195 80% 40%)',        // Deeper accent color for better contrast
+        bg: 'hsl(210 40% 97%)',            // Slightly lighter background
+        surface: 'hsl(210 40% 99%)',       // Lighter surface for better contrast with text
+        'text-primary': 'hsl(210 50% 10%)', // Darker text for better readability
+        'text-secondary': 'hsl(210 40% 30%)', // Darker secondary text for better contrast
       },
       spacing: {
         sm: '8px',
