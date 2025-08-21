@@ -1,0 +1,14 @@
+{
+  "name": "AgentSynth",
+  "description": "AgentSynth is a Base Mini App built with Zara.",
+  "image": "https://dummyimage.com/1200x628/0a0b0d/ffffff.png&text=OG",
+  "external_url": "https://bf6ffe79-e0f9-4ca2-be7b-df93280caa12.vistara.dev",
+  "properties": {
+    "app": {
+      "name": "AgentSynth",
+      "description": "AgentSynth is a Base Mini App built with Zara.",
+      "url": "https://bf6ffe79-e0f9-4ca2-be7b-df93280caa12.vistara.dev",
+      "icon": "https://0co.to/images/zara-2.png"
+    }
+  }
+}
